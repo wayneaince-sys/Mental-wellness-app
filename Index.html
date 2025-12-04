@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindWell - Your Mental Wellness Companion</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Crisis Banner -->
+    <div id="crisis-banner" class="crisis-banner hidden">
+        <div class="crisis-content">
+            <span class="crisis-icon">⚠️</span>
+            <p><strong>If you're in crisis:</strong> Call 988 (Suicide & Crisis Lifeline) or text "HELLO" to 741741 (Crisis Text Line)</p>
+            <button onclick="closeCrisisBanner()">✕</button>
+        </div>
+    </div>
+
+```
+<!-- Auth Container -->
+<div id="auth-container" class="auth-container">
+    <div class="auth-box">
+        <div class="logo">🧠 MindWell</div>
+        <h2 id="auth-title">Welcome Back</h2>
+        
+        <!-- Login Form -->
+        <form id="login-form" class="auth-form">
+            <div class="input-group">
+                <label for="login-email">Email</label>
+                <input type="email" id="login-email" required>
+            </div>
+            <div class="input-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" required>
+            </div>
+            <button type="submit" class="btn-primary">Log In</button>
+            <p class="toggle-auth">Don't have an account? <a href="#" onclick="toggleAuth()">Sign Up</a></p>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signup-form" class="auth-form hidden">
+            <div class="input-group">
+                <label for="signup-name">Full Name</label>
+                <input type="text" id="signup-name" required>
+            </div>
+            <div class="input-group">
+                <label for="signup-email">Email</label>
+                <input type="email" id="signup-email" required>
+            </div>
+            <div class="input-group">
+                <label for="signup-password">Password</label>
+                <input type="password" id="signup-password" required minlength="6">
+            </div>
+            <div class="input-group">
+                <label for="signup-confirm">Confirm Password</label>
+                <input type="password" id="signup-confirm" required>
+            </div>
+            <button type="submit" class="btn-primary">Sign Up</button>
+            <p class="toggle-auth">Already have an account? <a href="#" onclick="toggleAuth()">Log In</a></p>
+        </form>
+    </div>
+</div>
+
+<!-- Main App Container -->
+<div id="app-container" class="hidden">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">🧠 MindWell</div>
+                <nav class="nav">
+                    <span id="user-name" class="user-greeting"></span>
+                    <button onclick="logout()" class="btn-logout">Logout</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="container">
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('dashboard')">
+                <span class="tab-icon">🏠</span>Dashboard
+            </button>
+            <button class="tab-btn" onclick="showTab('mindfulness')">
+                <span class="tab-icon">🧘</span>Mindfulness
+            </button>
+            <button class="tab-btn" onclick="showTab('motivation')">
+                <span class="tab-icon">💪</span>Motivation
+            </button>
+            <button class="tab-btn" onclick="showTab('crisis')">
+                <span class="tab-icon">🆘</span>Crisis Support
+            </button>
+            <button class="tab-btn" onclick="showTab('journal')">
+                <span class="tab-icon">📔</span>Journal
+            </button>
+            <button class="tab-btn" onclick="showTab('resources')">
+                <span class="tab-icon">📚</span>Resources
+            </button>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard-tab" class="tab-content active">
+            <h2>Welcome to Your Wellness Dashboard</h2>
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3>🎯 Today's Focus</h3>
+                    <p id="daily-quote" class="quote"></p>
+                </div>
+                <div class="card">
+                    <h3>😊 Mood Check-in</h3>
+                    <div class="mood-selector">
+                        <button class="mood-btn" onclick="setMood('great')">😄</button>
+                        <button class="mood-btn" onclick="setMood('good')">🙂</button>
+                        <button class="mood-btn" onclick="setMood('okay')">😐</button>
+                        <button class="mood-btn" onclick="setMood('sad')">😢</button>
+                        <button class="mood-btn" onclick="setMood('stressed')">😰</button>
+                    </div>
+                    <p id="mood-feedback"></p>
+                </div>
+                <div class="card">
+                    <h3>📊 Your Progress</h3>
+                    <div class="progress-stats">
+                        <div class="stat">
+                            <span class="stat-label">Mindfulness Sessions</span>
+                            <span class="stat-value" id="mindfulness-count">0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Journal Entries</span>
+                            <span class="stat-value" id="journal-count">0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Days Active</span>
+                            <span class="stat-value" id="active-days">1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mindfulness Tab -->
+        <div id="mindfulness-tab" class="tab-content">
+            <h2>🧘 Mindfulness & Meditation</h2>
+            <div class="exercises-grid">
+                <div class="exercise-card" onclick="startExercise('breathing')">
+                    <div class="exercise-icon">🌬️</div>
+                    <h3>Deep Breathing</h3>
+                    <p>5-minute guided breathing exercise</p>
+                </div>
+                <div class="exercise-card" onclick="startExercise('body-scan')">
+                    <div class="exercise-icon">🧘‍♀️</div>
+                    <h3>Body Scan</h3>
+                    <p>10-minute relaxation meditation</p>
+                </div>
+                <div class="exercise-card" onclick="startExercise('gratitude')">
+                    <div class="exercise-icon">🙏</div>
+                    <h3>Gratitude Practice</h3>
+                    <p>Reflect on what you're grateful for</p>
+                </div>
+                <div class="exercise-card" onclick="startExercise('visualization')">
+                    <div class="exercise-icon">🌅</div>
+                    <h3>Visualization</h3>
+                    <p>Peaceful place visualization</p>
+                </div>
+            </div>
+
+            <!-- Exercise Player -->
+            <div id="exercise-player" class="exercise-player hidden">
+                <button class="close-btn" onclick="closeExercise()">✕</button>
+                <h3 id="exercise-title"></h3>
+                <div id="exercise-content"></div>
+                <div class="timer-display" id="timer-display"></div>
+                <button id="start-timer-btn" class="btn-primary" onclick="startTimer()">Start</button>
+            </div>
+        </div>
+
+        <!-- Motivation Tab -->
+        <div id="motivation-tab" class="tab-content">
+            <h2>💪 Daily Motivation</h2>
+            <div class="motivation-section">
+                <div class="card quote-card">
+                    <h3>Quote of the Day</h3>
+                    <blockquote id="motivational-quote"></blockquote>
+                </div>
+                
+                <div class="card">
+                    <h3>Affirmations</h3>
+                    <div id="affirmations-list" class="affirmations-list"></div>
+                    <button onclick="generateAffirmation()" class="btn-secondary">New Affirmation</button>
+                </div>
+
+                <div class="card">
+                    <h3>Set Your Intentions</h3>
+                    <textarea id="intentions-input" placeholder="What are your intentions for today?" rows="4"></textarea>
+                    <button onclick="saveIntention()" class="btn-primary">Save Intention</button>
+                    <div id="saved-intentions"></div>
+                </div>
+
+                <div class="card">
+                    <h3>Success Stories</h3>
+                    <div class="success-stories">
+                        <p>"Taking care of my mental health isn't weakness—it's strength."</p>
+                        <p>"Every small step forward is progress worth celebrating."</p>
+                        <p>"I've learned that healing isn't linear, and that's okay."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Crisis Support Tab -->
+        <div id="crisis-tab" class="tab-content">
+            <h2>🆘 Crisis Support & Resources</h2>
+            
+            <div class="crisis-alert">
+                <h3>⚠️ If You're in Immediate Danger</h3>
+                <p>Call 911 or go to your nearest emergency room.</p>
+            </div>
+
+            <div class="hotlines-grid">
+                <div class="hotline-card urgent">
+                    <h3>988 Suicide & Crisis Lifeline</h3>
+                    <p>24/7 support for people in crisis</p>
+                    <a href="tel:988" class="btn-emergency">Call 988</a>
+                    <p class="small-text">Available 24/7 in English and Spanish</p>
+                </div>
+
+                <div class="hotline-card">
+                    <h3>Crisis Text Line</h3>
+                    <p>Text support for any crisis</p>
+                    <a href="sms:741741&body=HELLO" class="btn-emergency">Text HELLO to 741741</a>
+                    <p class="small-text">Free, confidential, 24/7</p>
+                </div>
+
+                <div class="hotline-card">
+                    <h3>Veterans Crisis Line</h3>
+                    <p>Support for veterans and their families</p>
+                    <a href="tel:988" class="btn-emergency">Call 988, Press 1</a>
+                    <p class="small-text">Or text 838255</p>
+                </div>
+
+                <div class="hotline-card">
+                    <h3>SAMHSA Helpline</h3>
+                    <p>Mental health and substance abuse</p>
+                    <a href="tel:1-800-662-4357" class="btn-emergency">1-800-662-HELP</a>
+                    <p class="small-text">Treatment referral service</p>
+                </div>
+
+                <div class="hotline-card">
+                    <h3>NAMI Helpline</h3>
+                    <p>Mental health support and info</p>
+                    <a href="tel:1-800-950-6264" class="btn-emergency">1-800-950-NAMI</a>
+                    <p class="small-text">Mon-Fri, 10am-10pm ET</p>
+                </div>
+
+                <div class="hotline-card">
+                    <h3>The Trevor Project</h3>
+                    <p>LGBTQ+ youth crisis support</p>
+                    <a href="tel:1-866-488-7386" class="btn-emergency">1-866-488-7386</a>
+                    <p class="small-text">Text START to 678678</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Coping Strategies</h3>
+                <div class="coping-strategies">
+                    <div class="strategy">
+                        <h4>🌬️ Grounding Exercise (5-4-3-2-1)</h4>
+                        <p>Name 5 things you see, 4 you can touch, 3 you hear, 2 you smell, 1 you taste</p>
+                    </div>
+                    <div class="strategy">
+                        <h4>💧 Cold Water</h4>
+                        <p>Splash cold water on your face or hold ice cubes to activate your body's calming response</p>
+                    </div>
+                    <div class="strategy">
+                        <h4>📞 Reach Out</h4>
+                        <p>Call a trusted friend, family member, or one of the hotlines above</p>
+                    </div>
+                    <div class="strategy">
+                        <h4>✍️ Write It Down</h4>
+                        <p>Journal your feelings or write a letter you don't have to send</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Safety Plan</h3>
+                <p>Create a personalized safety plan for difficult moments:</p>
+                <textarea id="safety-plan" placeholder="1. Warning signs I notice...
+```
+
+1. People I can reach out to…
+1. Places I feel safe…
+1. Things that help me calm down…
+1. Reasons for living…” rows=“8”></textarea>
+   <button onclick="saveSafetyPlan()" class="btn-primary">Save Safety Plan</button>
+   </div>
+   </div>
+   
+   ```
+        <!-- Journal Tab -->
+        <div id="journal-tab" class="tab-content">
+            <h2>📔 Personal Journal</h2>
+            <div class="journal-section">
+                <div class="card">
+                    <h3>New Entry</h3>
+                    <input type="text" id="journal-title" placeholder="Entry title..." class="journal-title">
+                    <textarea id="journal-entry" placeholder="How are you feeling today? What's on your mind?" rows="10"></textarea>
+                    <div class="journal-actions">
+                        <button onclick="saveJournalEntry()" class="btn-primary">Save Entry</button>
+                        <button onclick="clearJournal()" class="btn-secondary">Clear</button>
+                    </div>
+                </div>
+   
+                <div class="card">
+                    <h3>Journal Prompts</h3>
+                    <div id="journal-prompts" class="journal-prompts"></div>
+                    <button onclick="getNewPrompt()" class="btn-secondary">Get New Prompt</button>
+                </div>
+   
+                <div class="card">
+                    <h3>Previous Entries</h3>
+                    <div id="journal-history" class="journal-history"></div>
+                </div>
+            </div>
+        </div>
+   
+        <!-- Resources Tab -->
+        <div id="resources-tab" class="tab-content">
+            <h2>📚 Mental Health Resources</h2>
+            
+            <div class="resources-grid">
+                <div class="resource-card">
+                    <h3>🎓 Educational Resources</h3>
+                    <ul>
+                        <li><a href="https://www.mentalhealth.gov" target="_blank">MentalHealth.gov</a></li>
+                        <li><a href="https://www.nimh.nih.gov" target="_blank">National Institute of Mental Health</a></li>
+                        <li><a href="https://www.nami.org" target="_blank">NAMI (National Alliance on Mental Illness)</a></li>
+                        <li><a href="https://www.samhsa.gov" target="_blank">SAMHSA</a></li>
+                    </ul>
+                </div>
+   
+                <div class="resource-card">
+                    <h3>🎧 Apps & Tools</h3>
+                    <ul>
+                        <li>Headspace - Meditation & Sleep</li>
+                        <li>Calm - Relaxation & Mindfulness</li>
+                        <li>BetterHelp - Online Therapy</li>
+                        <li>Talkspace - Therapy Platform</li>
+                    </ul>
+                </div>
+   
+                <div class="resource-card">
+                    <h3>📖 Recommended Reading</h3>
+                    <ul>
+                        <li>"The Body Keeps the Score" - Bessel van der Kolk</li>
+                        <li>"Maybe You Should Talk to Someone" - Lori Gottlieb</li>
+                        <li>"Breaking Barriers: Black Mental Health Matters"</li>
+                        <li>"The Gifts of Imperfection" - Brené Brown</li>
+                    </ul>
+                </div>
+   
+                <div class="resource-card">
+                    <h3>👥 Support Groups</h3>
+                    <ul>
+                        <li>Mental Health America Support Groups</li>
+                        <li>DBSA (Depression & Bipolar Support Alliance)</li>
+                        <li>Anxiety and Depression Association</li>
+                        <li>Local community mental health centers</li>
+                    </ul>
+                </div>
+   
+                <div class="resource-card">
+                    <h3>🏥 Finding Help</h3>
+                    <ul>
+                        <li><a href="https://www.psychologytoday.com/us/therapists" target="_blank">Find a Therapist</a></li>
+                        <li><a href="https://www.zocdoc.com" target="_blank">Find a Psychiatrist</a></li>
+                        <li>Insurance provider directories</li>
+                        <li>Community mental health centers</li>
+                    </ul>
+                </div>
+   
+                <div class="resource-card">
+                    <h3>💼 Workplace Support</h3>
+                    <ul>
+                        <li>Employee Assistance Programs (EAP)</li>
+                        <li>HR resources and accommodations</li>
+                        <li>Mental health days and leave</li>
+                        <li>Work-life balance resources</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+   ```
+   
+    </div>
+   
+    <script src="script.js"></script>
+
+</body>
+</html>
