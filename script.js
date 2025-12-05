@@ -1,3 +1,5 @@
+alert("script.js loaded!");
+// App State
 // App State
 let currentUser = null;
 let userData = {
