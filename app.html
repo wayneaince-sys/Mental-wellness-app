@@ -447,6 +447,13 @@
         background: var(--light-bg);
     }
 
+    /* Button Groups */
+    .btn-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
         .header {
@@ -470,6 +477,14 @@
 
         .grid, .hotline-grid, .exercise-grid {
             grid-template-columns: 1fr;
+        }
+
+        .btn-group {
+            flex-direction: column;
+        }
+
+        .btn-group .btn {
+            width: 100%;
         }
     }
 </style>
@@ -703,14 +718,17 @@
             <div class="card">
                 <h2>Your Safety Plan</h2>
                 <p>Create a personalized plan for difficult moments:</p>
-                <textarea rows="8" placeholder="1. Warning signs I notice...
+                <textarea id="safety-plan" rows="8" placeholder="1. Warning signs I notice...
 ```
 
 1. People I can reach out to…
 1. Places I feel safe…
 1. Things that help me calm down…
 1. Reasons for living…”></textarea>
-   <button class="btn btn-primary" style="margin-top: 15px;">Save Safety Plan</button>
+   <div class="btn-group">
+   <button id="save-safety-plan" class="btn btn-primary">Save Safety Plan</button>
+   <button id="clear-safety-plan" class="btn btn-secondary">Clear</button>
+   </div>
    </div>
    </div>
    
@@ -721,20 +739,20 @@
             
             <div class="card">
                 <h2>New Entry</h2>
-                <input type="text" placeholder="Entry title..." style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1.1em; margin-bottom: 15px;">
-                <textarea rows="10" placeholder="How are you feeling today? What's on your mind?"></textarea>
-                <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <button class="btn btn-primary">Save Entry</button>
-                    <button class="btn btn-secondary">Clear</button>
+                <input type="text" id="journal-title" placeholder="Entry title..." style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1.1em; margin-bottom: 15px;">
+                <textarea id="journal-entry" rows="10" placeholder="How are you feeling today? What's on your mind?"></textarea>
+                <div class="btn-group">
+                    <button id="save-journal" class="btn btn-primary">Save Entry</button>
+                    <button id="clear-journal" class="btn btn-secondary">Clear</button>
                 </div>
             </div>
    
             <div class="card">
                 <h2>Journal Prompts</h2>
-                <div style="background: #fef3c7; padding: 20px; border-radius: 10px; font-style: italic; color: #78350f; margin: 15px 0;">
+                <div id="journal-prompt" style="background: #fef3c7; padding: 20px; border-radius: 10px; font-style: italic; color: #78350f; margin: 15px 0;">
                     "What are three things you're grateful for today?"
                 </div>
-                <button class="btn btn-secondary" style="width: 100%;">Get New Prompt</button>
+                <button id="new-prompt-btn" class="btn btn-secondary" style="width: 100%;">Get New Prompt</button>
             </div>
    
             <div class="card">
@@ -804,10 +822,32 @@
         // App State
         let currentUser = null;
    
+        // Journal Prompts Array
+        const journalPrompts = [
+            "What are three things you're grateful for today?",
+            "How did you show yourself kindness today?",
+            "What's one challenge you faced and how did you handle it?",
+            "Write about a moment when you felt proud of yourself.",
+            "What does self-care mean to you?",
+            "Describe a place where you feel completely at peace.",
+            "What are your goals for this week?",
+            "Who in your life makes you feel supported? How?",
+            "What's one thing you learned about yourself recently?",
+            "How do you want to feel tomorrow?",
+            "What makes you feel most alive?",
+            "What boundaries do you need to set for yourself?",
+            "What are you letting go of today?",
+            "What would you tell your younger self?",
+            "What brings you joy in small moments?"
+        ];
+   
+        let currentPromptIndex = 0;
+   
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             checkAuth();
             setupEventListeners();
+            loadSafetyPlan();
         });
    
         function setupEventListeners() {
@@ -843,6 +883,64 @@
                     showNotification('Mood recorded: ' + this.title, 'success');
                 });
             });
+   
+            // Journal prompt button
+            document.getElementById('new-prompt-btn').addEventListener('click', getNewPrompt);
+   
+            // Safety plan buttons
+            document.getElementById('save-safety-plan').addEventListener('click', saveSafetyPlan);
+            document.getElementById('clear-safety-plan').addEventListener('click', clearSafetyPlan);
+   
+            // Journal buttons
+            document.getElementById('save-journal').addEventListener('click', saveJournal);
+            document.getElementById('clear-journal').addEventListener('click', clearJournal);
+        }
+   
+        function getNewPrompt() {
+            currentPromptIndex = (currentPromptIndex + 1) % journalPrompts.length;
+            document.getElementById('journal-prompt').textContent = '"' + journalPrompts[currentPromptIndex] + '"';
+            showNotification('New prompt loaded!', 'success');
+        }
+   
+        function saveSafetyPlan() {
+            const plan = document.getElementById('safety-plan').value;
+            if (plan.trim()) {
+                localStorage.setItem('safetyPlan_' + currentUser.id, plan);
+                showNotification('Safety plan saved!', 'success');
+            } else {
+                showNotification('Please write a safety plan first', 'error');
+            }
+        }
+   
+        function clearSafetyPlan() {
+            document.getElementById('safety-plan').value = '';
+            showNotification('Safety plan cleared', 'success');
+        }
+   
+        function loadSafetyPlan() {
+            if (currentUser) {
+                const saved = localStorage.getItem('safetyPlan_' + currentUser.id);
+                if (saved) {
+                    document.getElementById('safety-plan').value = saved;
+                }
+            }
+        }
+   
+        function saveJournal() {
+            const title = document.getElementById('journal-title').value;
+            const entry = document.getElementById('journal-entry').value;
+            
+            if (title.trim() && entry.trim()) {
+                showNotification('Journal entry saved!', 'success');
+                clearJournal();
+            } else {
+                showNotification('Please add both title and content', 'error');
+            }
+        }
+   
+        function clearJournal() {
+            document.getElementById('journal-title').value = '';
+            document.getElementById('journal-entry').value = '';
         }
    
         function showSignupForm() {
@@ -869,6 +967,7 @@
                 currentUser = user;
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 showApp();
+                loadSafetyPlan();
                 showNotification('Welcome back, ' + user.name + '!', 'success');
             } else {
                 showNotification('Invalid email or password', 'error');
@@ -914,6 +1013,7 @@
             if (user) {
                 currentUser = user;
                 showApp();
+                loadSafetyPlan();
             }
         }
    
