@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindWell - Your Mental Wellness Companion</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    :root {
+        --primary-color: #667eea;
+        --secondary-color: #764ba2;
+        --success-color: #48bb78;
+        --danger-color: #f56565;
+        --text-dark: #2d3748;
+        --text-light: #718096;
+        --bg-light: #f7fafc;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        min-height: 100vh;
+        color: var(--text-dark);
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Auth Container */
+    .auth-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .auth-box {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        max-width: 450px;
+        width: 100%;
+    }
+
+    .logo {
+        font-size: 2.5em;
+        text-align: center;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .auth-box h2 {
+        text-align: center;
+        color: var(--text-dark);
+        margin-bottom: 30px;
+    }
+
+    .auth-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .input-group label {
+        font-weight: 600;
+        color: var(--text-dark);
+    }
+
+    .input-group input {
+        padding: 12px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1em;
+        transition: border-color 0.3s;
+    }
+
+    .input-group input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+
+    .btn-primary {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1em;
+        font-weight: 600;
+        cursor: pointer;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        transition: all 0.3s;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .toggle-auth {
+        text-align: center;
+        color: var(--text-light);
+        margin-top: 10px;
+    }
+
+    .toggle-auth a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    /* Success Message */
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        background: var(--success-color);
+        color: white;
+        border-radius: 8px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        z-index: 9999;
+        animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* App Container (shown after login) */
+    #app-container {
+        padding: 20px;
+    }
+
+    #app-container h1 {
+        color: white;
+        text-align: center;
+        margin: 40px 0;
+        font-size: 2.5em;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .card {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+
+    .btn-logout {
+        background: transparent;
+        color: var(--danger-color);
+        border: 2px solid var(--danger-color);
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .btn-logout:hover {
+        background: var(--danger-color);
+        color: white;
+    }
+
+    .header {
+        background: rgba(255,255,255,0.95);
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+</style>
+```
+
+</head>
+<body>
+    <!-- Auth Container -->
+    <div id="auth-container" class="auth-container">
+        <div class="auth-box">
+            <div class="logo">🧠 MindWell</div>
+            <h2 id="auth-title">Welcome Back</h2>
+
+```
+        <!-- Login Form -->
+        <form id="login-form" class="auth-form">
+            <div class="input-group">
+                <label for="login-email">Email</label>
+                <input type="email" id="login-email" required>
+            </div>
+            <div class="input-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" required>
+            </div>
+            <button type="submit" class="btn-primary">Log In</button>
+            <p class="toggle-auth">Don't have an account? <a id="show-signup">Sign Up</a></p>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signup-form" class="auth-form hidden">
+            <div class="input-group">
+                <label for="signup-name">Full Name</label>
+                <input type="text" id="signup-name" required>
+            </div>
+            <div class="input-group">
+                <label for="signup-email">Email</label>
+                <input type="email" id="signup-email" required>
+            </div>
+            <div class="input-group">
+                <label for="signup-password">Password</label>
+                <input type="password" id="signup-password" required minlength="6">
+            </div>
+            <div class="input-group">
+                <label for="signup-confirm">Confirm Password</label>
+                <input type="password" id="signup-confirm" required>
+            </div>
+            <button type="submit" class="btn-primary">Sign Up</button>
+            <p class="toggle-auth">Already have an account? <a id="show-login">Log In</a></p>
+        </form>
+    </div>
+</div>
+
+<!-- Main App Container -->
+<div id="app-container" class="hidden">
+    <div class="container">
+        <div class="header">
+            <div class="logo">🧠 MindWell</div>
+            <div>
+                <span id="user-name"></span>
+                <button id="logout-btn" class="btn-logout">Logout</button>
+            </div>
+        </div>
+
+        <h1>Welcome to Your Wellness Dashboard</h1>
+
+        <div class="card">
+            <h2>🎯 Quick Links</h2>
+            <p>Your mental wellness journey starts here. Access mindfulness exercises, journal entries, crisis support, and more.</p>
+        </div>
+
+        <div class="card">
+            <h2>🆘 Crisis Resources</h2>
+            <p><strong>If you're in crisis:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                <li>Call <strong>988</strong> - Suicide & Crisis Lifeline</li>
+                <li>Text <strong>HELLO</strong> to <strong>741741</strong> - Crisis Text Line</li>
+                <li>Call <strong>988, Press 1</strong> - Veterans Crisis Line</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>💪 Daily Motivation</h2>
+            <p style="font-style: italic; color: #667eea; font-size: 1.1em; margin-top: 15px;">
+                "Taking care of your mental health is an act of courage, not weakness."
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // App State
+    let currentUser = null;
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        checkAuth();
+        setupEventListeners();
+    });
+
+    function setupEventListeners() {
+        // Login form
+        document.getElementById('login-form').addEventListener('submit', handleLogin);
+        
+        // Signup form
+        document.getElementById('signup-form').addEventListener('submit', handleSignup);
+        
+        // Toggle between login and signup
+        document.getElementById('show-signup').addEventListener('click', function(e) {
+            e.preventDefault();
+            showSignupForm();
+        });
+        
+        document.getElementById('show-login').addEventListener('click', function(e) {
+            e.preventDefault();
+            showLoginForm();
+        });
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', logout);
+    }
+
+    function showSignupForm() {
+        document.getElementById('login-form').classList.add('hidden');
+        document.getElementById('signup-form').classList.remove('hidden');
+        document.getElementById('auth-title').textContent = 'Create Account';
+    }
+
+    function showLoginForm() {
+        document.getElementById('signup-form').classList.add('hidden');
+        document.getElementById('login-form').classList.remove('hidden');
+        document.getElementById('auth-title').textContent = 'Welcome Back';
+    }
+
+    function handleLogin(e) {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        const user = users.find(u => u.email === email && u.password === password);
+
+        if (user) {
+            currentUser = user;
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            showApp();
+            showNotification('Welcome back, ' + user.name + '!', 'success');
+        } else {
+            showNotification('Invalid email or password', 'error');
+        }
+    }
+
+    function handleSignup(e) {
+        e.preventDefault();
+        const name = document.getElementById('signup-name').value;
+        const email = document.getElementById('signup-email').value;
+        const password = document.getElementById('signup-password').value;
+        const confirm = document.getElementById('signup-confirm').value;
+
+        if (password !== confirm) {
+            showNotification('Passwords do not match', 'error');
+            return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        if (users.find(u => u.email === email)) {
+            showNotification('Email already registered', 'error');
+            return;
+        }
+
+        const newUser = { 
+            id: Date.now(), 
+            name, 
+            email, 
+            password,
+            createdAt: new Date().toISOString()
+        };
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+
+        currentUser = newUser;
+        localStorage.setItem('currentUser', JSON.stringify(newUser));
+        showApp();
+        showNotification('Account created successfully!', 'success');
+    }
+
+    function checkAuth() {
+        const user = JSON.parse(localStorage.getItem('currentUser'));
+        if (user) {
+            currentUser = user;
+            showApp();
+        }
+    }
+
+    function showApp() {
+        document.getElementById('auth-container').classList.add('hidden');
+        document.getElementById('app-container').classList.remove('hidden');
+        document.getElementById('user-name').textContent = 'Hello, ' + currentUser.name + '!';
+    }
+
+    function logout() {
+        localStorage.removeItem('currentUser');
+        currentUser = null;
+        document.getElementById('auth-container').classList.remove('hidden');
+        document.getElementById('app-container').classList.add('hidden');
+        showNotification('Logged out successfully', 'success');
+        
+        // Clear forms
+        document.getElementById('login-form').reset();
+        document.getElementById('signup-form').reset();
+        showLoginForm();
+    }
+
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.style.background = type === 'success' ? '#48bb78' : '#f56565';
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+</script>
+```
+
+</body>
+</html>
