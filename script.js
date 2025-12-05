@@ -1,5 +1,4 @@
-alert("script.js loaded!");
-// App State
+"script.js loaded!"
 // App State
 let currentUser = null;
 let userData = {
